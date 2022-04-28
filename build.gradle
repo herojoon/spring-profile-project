@@ -1,0 +1,62 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.7'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+/**
+ * 방법1 (Properties를 InputStream으로 읽기)
+ * 1) Properties에 src/main/resources에 위치한 application.properties를 load로 읽어옵니다.
+ * 2) 읽어 온 properties에 key값을 String형으로 입력하여 존재여부를 확인하거나 value를 가져올 수 있습니다.
+ */
+/*
+def Properties properties = new Properties()
+InputStream inputStream = new FileInputStream(project.rootProject.file('src/main/resources/application.properties'))
+properties.load(inputStream)
+println properties.containsKey("third-party.api.url")  // application.properties에 key가 존재하는지 체크
+println properties.getProperty("third-party.api.url")  // application.properties에 key의 value 읽어오기
+println properties.getProperty("third-party.api.url", "http://defaulturl.com")  // application.properties에 key의 value 읽어오기, 없으면 오른쪽에 입력한 값(ex. http://defaulturl.com)이 default값이 됨
+println properties.containsKey("service.name")
+println properties.getProperty("service.name")
+println properties.getProperty("service.name", "")
+*/
+/**
+ * 방법2 (Properties를 Render로 읽기)
+ * 1) Properties에 src/main/resources에 위치한 application.properties를 load로 읽어옵니다.
+ * 2) 읽어 온 properties에 key값을 String형으로 입력하여 존재여부를 확인하거나 value를 가져올 수 있습니다.
+ */
+// src/main/resources에 위치한 application.properties를 load합니다.
+def Properties properties = new Properties()
+Reader reader = new FileReader(project.rootProject.file('src/main/resources/application.properties'))
+properties.load(reader)
+println properties.containsKey("third-party.api.url")  // application.properties에 key가 존재하는지 체크
+println properties.getProperty("third-party.api.url")  // application.properties에 key의 value 읽어오기
+println properties.getProperty("third-party.api.url", "http://defaulturl.com")  // application.properties에 key의 value 읽어오기, 없으면 오른쪽에 입력한 값(ex. http://defaulturl.com)이 default값이 됨
+println properties.containsKey("service.name")
+println properties.getProperty("service.name")
+println properties.getProperty("service.name", "")
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
